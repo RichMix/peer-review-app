@@ -15,9 +15,9 @@ const customNodeOptions = {
 }
 
 const URLForSetCookie =
-  process.env.NODE_ENV === 'development'
+  (process.env.NODE_ENV === 'development'
     ? 'http://localhost:3000'
-    : window.location.origin + '/setcookie'
+    : window.location.origin) + '/setcookie'
 
 console.log('URLForSetCookie', URLForSetCookie)
 
@@ -43,7 +43,6 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-    console.log('Mounted!')
     // Check if Metamask is there and user is already logged in (window.enable()).
     // If so, prompt log in with Metamask (to avoid showing user the login screen again).
     if (typeof window.ethereum !== 'undefined') {
@@ -195,7 +194,6 @@ export default class App extends React.Component {
    * @returns {Promise} - async function fetchBlockchainReviewsAndSetReviewsOfUser
    */
   init = (address) => {
-    console.log('address0000', address)
     // Get the user object from database.
     this.setState({ isLoading: true })
     this.getUserObjAndSetUserState(address)
@@ -263,7 +261,7 @@ export default class App extends React.Component {
     }
     axios({
       method: 'post',
-      url: 'http://localhost:3000/setcookie',
+      url: URLForSetCookie,
       data: addressToken,
       headers: { withCredentials: true, 'Content-Type': 'multipart/form-data' },
     }).then((res) => {

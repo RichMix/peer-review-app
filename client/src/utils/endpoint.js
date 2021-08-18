@@ -95,5 +95,7 @@ export const axioput = (endpoint, body) => {
     url: URL + endpoint,
     data: body,
     headers: { withCredentials: true, 'Content-Type': 'application/json' },
-  }).then(handleErrors)
+  })
+    .then(handleErrors)
+    .then((res) => res)
 }
