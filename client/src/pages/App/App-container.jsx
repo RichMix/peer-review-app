@@ -234,7 +234,7 @@ export default class App extends React.Component {
           console.log('Found user:')
           console.log(user)
           this.setState({
-            user: user,
+            user: user.data,
           })
         })
     )
@@ -271,6 +271,8 @@ export default class App extends React.Component {
 
   render() {
     console.log('Rendering...')
+    console.log('this.state.user', this.state.user)
+
     return (
       <Context.Provider
         value={{

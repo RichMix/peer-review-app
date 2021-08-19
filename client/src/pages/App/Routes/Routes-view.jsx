@@ -31,50 +31,50 @@ export default function RoutesView({
 
   // Don't repeat props isLoggedInWithWallet, isNoUserFound, and isConnectedToBloxberg
   // Logged in to wallet if logged in to Magic or Metamask.
-  const PrivateRouteWithAuth = (propsdata) => {
+  const PrivateRouteWithAuth = (props) => {
     return (
       <PrivateRoute
         isLoggedInWithWallet={isLoggedInWithMagic || isLoggedInWithMetamask}
         isNoUserFound={isNoUserFound}
         isConnectedToBloxberg={isConnectedToBloxberg}
-        {...propsdata}
+        {...props}
       />
     )
   }
 
-  const TopBarWithMagic = (propsdata) => {
-    return <TopBar isLoggedInWithMagic={isLoggedInWithMagic} {...propsdata} />
+  const TopBarWithMagic = (props) => {
+    return <TopBar isLoggedInWithMagic={isLoggedInWithMagic} {...props} />
   }
 
   return (
     <Switch>
       <PrivateRouteWithAuth path="/Overview">
-        <TopBarWithMagic title="Overview" {...propsdata} />
-        <Overview {...propsdata} />
+        <TopBarWithMagic title="Overview" {...props} />
+        <Overview {...props} />
       </PrivateRouteWithAuth>
       <PrivateRouteWithAuth path="/Reviews/AddReview">
-        <TopBarWithMagic title="Reviews" {...propsdata} />
-        <AddReview {...propsdata} refreshReviews={propsdata.refreshReviews} />
+        <TopBarWithMagic title="Reviews" {...props} />
+        <AddReview {...props} refreshReviews={props.refreshReviews} />
       </PrivateRouteWithAuth>
       <PrivateRouteWithAuth path="/Reviews/MyReviews">
-        <TopBarWithMagic title="Reviews" {...propsdata} />
-        <AllReviews {...propsdata} />
+        <TopBarWithMagic title="Reviews" {...props} />
+        <AllReviews {...props} />
       </PrivateRouteWithAuth>
       <PrivateRouteWithAuth path="/Reviews/VouchReview">
-        <TopBarWithMagic title="Reviews" {...propsdata} />
-        <VouchReview {...propsdata} />
+        <TopBarWithMagic title="Reviews" {...props} />
+        <VouchReview {...props} />
       </PrivateRouteWithAuth>
       <PrivateRouteWithAuth path="/Reviews/:id">
-        <TopBarWithMagic title="Review" {...propsdata} />
-        <SingleReview {...propsdata} />
+        <TopBarWithMagic title="Review" {...props} />
+        <SingleReview {...props} />
       </PrivateRouteWithAuth>
       <PrivateRouteWithAuth path="/Reviews/">
         {/* Redirect to AddReview at route /Review/ */}
         <Redirect to="/Reviews/AddReview" />
       </PrivateRouteWithAuth>
       <PrivateRouteWithAuth path="/Settings">
-        <TopBarWithMagic title="Settings" {...propsdata} />
-        <Settings {...propsdata} />
+        <TopBarWithMagic title="Settings" {...props} />
+        <Settings {...props} />
       </PrivateRouteWithAuth>
       <PrivateRouteWithAuth path="/">
         <Redirect to="/Overview" />

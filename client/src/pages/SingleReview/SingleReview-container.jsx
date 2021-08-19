@@ -1,11 +1,16 @@
-import Context from 'components/Context';
-import Loader from 'components/Loader';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { withRouter } from 'react-router';
-import { getAllAuthorNames } from 'utils/authors';
-import { deleteReview, getOneBlockchainReview, getOneDatabaseReview, vouchReview } from 'utils/review';
-import SingleReviewView from './SingleReview-view';
+import Context from 'components/Context'
+import Loader from 'components/Loader'
+import PropTypes from 'prop-types'
+import React from 'react'
+import { withRouter } from 'react-router'
+import { getAllAuthorNames } from 'utils/authors'
+import {
+  deleteReview,
+  getOneBlockchainReview,
+  getOneDatabaseReview,
+  vouchReview,
+} from 'utils/review'
+import SingleReviewView from './SingleReview-view'
 
 class SingleReviewContainer extends React.Component {
   static propTypes = {
@@ -15,10 +20,10 @@ class SingleReviewContainer extends React.Component {
     history: PropTypes.object.isRequired,
   }
 
-  static contextType = Context; // Access user Context
+  static contextType = Context // Access user Context
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isLoading: true,
       DBreview: {},
@@ -26,109 +31,120 @@ class SingleReviewContainer extends React.Component {
       isVouchedByUser: false,
       isOwnReview: false, // Is the review owned by the current user?
       hash: null,
-      fileName: null
-    };
+      fileName: null,
+    }
   }
 
   componentDidMount() {
-    this.fetchAndLoadReview();
+    this.fetchAndLoadReview()
   }
 
   fetchAndLoadReview = () => {
     this.fetchReview()
-      .then(reviewArr => {
+      .then((reviewArr) => {
         this.setState({
           isOwnReview: this.context.user._id === reviewArr[1].author, // Do this before fetchAllAuthorsAndReplaceAuthorField. Should be refactored. See function comments.
-          DBreview: reviewArr[0],
-          isVouchedByUser: this.checkIsVouchedByUser(this.context.user._id, reviewArr[1].vouchers)
-        });
-        return this.fetchAllAuthorsAndReplaceAuthorField(reviewArr[1]);
+          DBreview: reviewArr[0].data,
+          isVouchedByUser: this.checkIsVouchedByUser(
+            this.context.user._id,
+            reviewArr[1].vouchers,
+          ),
+        })
+        return this.fetchAllAuthorsAndReplaceAuthorField(reviewArr[1])
       })
-      .then(blockChainReviewWithName => {
+      .then((blockChainReviewWithName) => {
         this.setState({
           blockchainReview: blockChainReviewWithName,
-          isLoading: false
-        });
+          isLoading: false,
+        })
       })
-      .catch(console.error);
+      .catch(console.error)
   }
 
   /**
    * Function to replace author address with author name and surname in the current review.
    * TODO: It does not make sense to get all of the authors. There should be an endpoint where we query with an address and get the author firstName + lastName.
-   * 
+   *
    * @param {Object} - blockchainReview the review object from blockchain
    * @returns {Object} - modified review with author names instead of address.
    */
   fetchAllAuthorsAndReplaceAuthorField = (blockchainReview) => {
-    return getAllAuthorNames()
-      .then(authorsMap => {
-        let reviewAuthor = blockchainReview.author;
-        if (authorsMap[reviewAuthor] !== undefined) {
-          // Change author name in object
-          blockchainReview.author = authorsMap[reviewAuthor].firstName + ' ' + authorsMap[reviewAuthor].lastName;
+    return getAllAuthorNames().then((authorsMap) => {
+      let reviewAuthor = blockchainReview.author
+      if (authorsMap[reviewAuthor] !== undefined) {
+        // Change author name in object
+        blockchainReview.author =
+          authorsMap[reviewAuthor].firstName +
+          ' ' +
+          authorsMap[reviewAuthor].lastName
+      }
+      // Change voucher addresses to names
+      for (const [i, voucher] of blockchainReview.vouchers.entries()) {
+        if (authorsMap[voucher] !== undefined) {
+          blockchainReview.vouchers[i] =
+            authorsMap[voucher].firstName + ' ' + authorsMap[voucher].lastName
         }
-        // Change voucher addresses to names
-        for (const [i, voucher] of blockchainReview.vouchers.entries()) {
-          if (authorsMap[voucher] !== undefined) {
-            blockchainReview.vouchers[i] = authorsMap[voucher].firstName + ' ' + authorsMap[voucher].lastName;
-          }
-        }
-        return blockchainReview;
-      });
+      }
+      return blockchainReview
+    })
   }
   fetchReview = () => {
-    let address = this.props.user._id;
-    let id = this.props.match.params.id;
+    let address = this.props.user._id
+    let id = this.props.match.params.id
 
-    return Promise.all([getOneDatabaseReview(address, id), getOneBlockchainReview(id)]);
+    return Promise.all([
+      getOneDatabaseReview(address, id),
+      getOneBlockchainReview(id),
+    ])
   }
 
   vouchReview = () => {
-    let id = this.state.blockchainReview.id;
-    this.setState({ isLoading: true });
+    let id = this.state.blockchainReview.id
+    this.setState({ isLoading: true })
     vouchReview(id)
       .then(() => {
-        return this.fetchAndLoadReview();
+        return this.fetchAndLoadReview()
       })
       .then(() => this.setState({ isLoading: false }))
-      .catch(console.error);
+      .catch(console.error)
   }
 
   checkIsVouchedByUser = (address, array) => {
-    return array.includes(address);
+    return array.includes(address)
   }
 
   deleteReview = () => {
-    let id = this.state.blockchainReview.id;
-    this.setState({ isLoading: true });
+    let id = this.state.blockchainReview.id
+    this.setState({ isLoading: true })
     deleteReview(id)
       .then((response) => {
-        console.log(response);
-        this.props.deleteReviewFromState(id);
-        this.setState({ isLoading: false });
-        console.log(`Review ${id} deleted`);
-        this.props.history.goBack();
+        console.log(response)
+        this.props.deleteReviewFromState(id)
+        this.setState({ isLoading: false })
+        console.log(`Review ${id} deleted`)
+        this.props.history.goBack()
       })
-      .catch(console.error);
+      .catch(console.error)
   }
 
   handleFileChange = (e) => {
-    const file = e.target.files[0];
-    return file.arrayBuffer()
-      .then(data => {
-        return crypto.subtle.digest('SHA-256', data);
+    const file = e.target.files[0]
+    return file
+      .arrayBuffer()
+      .then((data) => {
+        return crypto.subtle.digest('SHA-256', data)
       })
-      .then(hashArrayBuffer => {
+      .then((hashArrayBuffer) => {
         // convert arrayBuffer to uint8 to a Javascript Array. Change each byte to hex form and join as strings.
-        const hashStr = Array.from(new Uint8Array(hashArrayBuffer)).map(b => b.toString(16)).join('');
-        this.setState({ hash: hashStr, fileName: file.name });
-      });
+        const hashStr = Array.from(new Uint8Array(hashArrayBuffer))
+          .map((b) => b.toString(16))
+          .join('')
+        this.setState({ hash: hashStr, fileName: file.name })
+      })
   }
 
   render() {
-    if (this.state.isLoading)
-      return <Loader />;
+    if (this.state.isLoading) return <Loader />
     return (
       <SingleReviewView
         DBreview={this.state.DBreview}
@@ -141,8 +157,8 @@ class SingleReviewContainer extends React.Component {
         hash={this.state.hash}
         fileName={this.state.fileName}
       />
-    );
+    )
   }
 }
 
-export default withRouter(SingleReviewContainer);
+export default withRouter(SingleReviewContainer)
