@@ -201,8 +201,8 @@ export default function Register() {
       })
       .then((promises) => {
         console.log(promises)
-        let namesObj = promises[0]
-        let emails = promises[1].emails
+        let namesObj = promises[0].data
+        let emails = promises[1].data.emails
         console.log(namesObj)
         if (emails.length > 0) reset({ ...namesObj, email: emails[0].email })
         else reset(namesObj)
