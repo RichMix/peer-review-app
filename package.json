@@ -9,6 +9,8 @@
   "dependencies": {
     "@openzeppelin/network": "^0.4.1",
     "@truffle/hdwallet-provider": "^1.0.33",
+    "cookie-parser": "^1.4.5",
+    "jsonwebtoken": "^8.5.1",
     "client": "file:client",
     "peer-review-server": "file:server"
   },
