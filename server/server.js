@@ -4,7 +4,6 @@ var winston = require('./config/winston')
 var morgan = require('morgan')
 var cors = require('cors')
 const cookieParser = require('cookie-parser')
-const jwt = require('jsonwebtoken')
 
 const reviewRoutes = require('./routes/reviewRoutes')
 const authorRoutes = require('./routes/authorRoutes')
@@ -64,28 +63,6 @@ app.use(express.json())
 
 app.use('/api/reviews', reviewRoutes)
 app.use('/api/authors', authorRoutes)
-
-app.post('/setcookie', function (req, res) {
-  let address = req.body.addressForToken
-  const token = jwt.sign(
-    {
-      address: address,
-    },
-    process.env.JWT_KEY,
-    {
-      expiresIn: '1h',
-    },
-  )
-  res
-    .status(202)
-    .cookie('jwt', token, {
-      httpOnly: true,
-      sameSite: 'strict',
-      path: '/',
-      expires: new Date(new Date().getTime() + 500 * 1000),
-    })
-    .send('Cookies added')
-})
 
 app.listen(port, () => {
   winston.info('Express Listening at http://localhost:' + port)

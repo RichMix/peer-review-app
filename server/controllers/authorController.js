@@ -2,6 +2,7 @@ const Author = require('../models/ReviewAuthor')
 // const mongo = require('../utils/mongo');
 // const db = mongo.getDb();
 const logger = require('winston')
+const jwt = require('jsonwebtoken')
 
 // GET /authors/:address
 exports.getAuthor = async (req, res) => {
@@ -93,4 +94,27 @@ exports.getAllAuthorNames = (_, res) => {
     .catch((err) => {
       res.status(500).send(err)
     })
+}
+
+// POST /setcookie
+exports.setcookie = (req, res) => {
+  let address = req.body.addressForToken
+  const token = jwt.sign(
+    {
+      address: address,
+    },
+    process.env.JWT_KEY,
+    {
+      expiresIn: '1h',
+    },
+  )
+  res
+    .status(202)
+    .cookie('jwt', token, {
+      httpOnly: true,
+      sameSite: 'strict',
+      path: '/',
+      expires: new Date(new Date().getTime() + 1000 * 1000),
+    })
+    .send('Cookies added')
 }

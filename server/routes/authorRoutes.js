@@ -5,6 +5,7 @@ const routes = Router({ mergeParams: true }) // Merge to access parent params i.
 const checkAuth = require('../middleware/check-auth')
 
 // /authors/
+routes.post('/setcookie', authorController.setcookie)
 routes.get('/:address', checkAuth, authorController.getAuthor)
 routes.post('/:address', checkAuth, authorController.addAuthor)
 routes.put('/:address', checkAuth, authorController.updateAuthor)
