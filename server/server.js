@@ -32,6 +32,7 @@ const whitelist = [
   'http://client',
   'http://peerview.bloxberg.org/',
   'https://peerview.bloxberg.org/',
+  'https://qa.peerview.bloxberg.org/',
 ] // client as Docker service name instead of localhost.
 const corsOptions = {
   origin: function (origin, callback) {
