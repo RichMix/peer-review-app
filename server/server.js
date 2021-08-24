@@ -37,7 +37,7 @@ const whitelist = [
 const corsOptions = {
   origin: function (origin, callback) {
     console.log('originoriginoriginorigin', origin) // Allow if origin found in whitelist
-    if (!origin || whitelist.indexOf(origin) !== -1) {
+    if (!origin || whitelist.indexOf(origin) !== -1 || origin !== undefined) {
       console.log('inside sucess')
       // or a REST tool (postman) is being used or same origin.
       callback(null, true)
