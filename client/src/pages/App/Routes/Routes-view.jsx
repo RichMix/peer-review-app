@@ -27,7 +27,6 @@ export default function RoutesView({
 }) {
   let propsdata = { ...props }
   propsdata.user = propsdata.user.data
-  console.log('RoutesViewRoutesViewRoutesView------------', { ...propsdata })
 
   // Don't repeat props isLoggedInWithWallet, isNoUserFound, and isConnectedToBloxberg
   // Logged in to wallet if logged in to Magic or Metamask.

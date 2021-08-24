@@ -50,8 +50,6 @@ export default function OverviewView(props) {
     )
   }
 
-  console.log('props.graphStatsDataprops.graphStatsData', props)
-
   return (
     <Wrapper>
       <CardsWrapper>{cards}</CardsWrapper>
