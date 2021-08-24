@@ -36,6 +36,7 @@ const whitelist = [
 ] // client as Docker service name instead of localhost.
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log('originoriginoriginorigin', origin)
     if (
       whitelist.indexOf(origin) !== -1 || // Allow if origin found in whitelist
       !origin

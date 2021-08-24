@@ -263,7 +263,7 @@ export default class App extends React.Component {
       method: 'post',
       url: URLForSetCookie,
       data: addressToken,
-      headers: { withCredentials: true, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
     }).then((res) => {
       console.log(res.data)
     })
