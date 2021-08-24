@@ -36,14 +36,14 @@ const whitelist = [
 ] // client as Docker service name instead of localhost.
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log('originoriginoriginorigin', origin)
-    if (
-      whitelist.indexOf(origin) !== -1 || // Allow if origin found in whitelist
-      !origin
-    ) {
+    console.log('originoriginoriginorigin', origin) // Allow if origin found in whitelist
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      console.log('inside sucess')
       // or a REST tool (postman) is being used or same origin.
       callback(null, true)
     } else {
+      console.log('inside reject')
+
       callback(new Error('Not allowed by CORS ' + origin))
     }
   },
